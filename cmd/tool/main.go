@@ -3,12 +3,13 @@ package main
 import (
 	"crypto/md5"
 	"fmt"
-	"github.com/alebabai/http-response-hash/config"
-	"github.com/alebabai/http-response-hash/pkg/hasher"
-	"github.com/alebabai/http-response-hash/pkg/pool"
 	"net/http"
 	"net/url"
 	"os"
+
+	"github.com/alebabai/http-response-hash/config"
+	"github.com/alebabai/http-response-hash/pkg/hasher"
+	"github.com/alebabai/http-response-hash/pkg/pool"
 )
 
 func fatal(err error) {
@@ -17,7 +18,7 @@ func fatal(err error) {
 }
 
 func genericSlice(in []url.URL) []interface{} {
-	out := make([]interface{}, len(in), len(in))
+	out := make([]interface{}, len(in))
 	for i, v := range in {
 		out[i] = v
 	}
