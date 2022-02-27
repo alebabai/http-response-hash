@@ -1,6 +1,10 @@
 package config
 
+import (
+	"net/url"
+)
+
 type Config struct {
 	Parallel int
-	Inputs   []string
+	URLs     []url.URL
 }
