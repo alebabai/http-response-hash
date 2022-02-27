@@ -17,6 +17,8 @@ func ParseArgs() (*Config, error) {
 		flag.Parse()
 	}
 
+	cfg.Inputs = flag.Args()
+
 	if err := cfg.Validate(); err != nil {
 		return nil, fmt.Errorf("failed to validate config: %w", err)
 	}
