@@ -48,7 +48,7 @@ make install
 
 ### Notes
 
-Tool support addresses with and without a schema (`http `will be used).  
+Tool support addresses with and without a schema (`http` will be used).  
 Addresses must be space-separated, just like regular command line arguments.
 
 ### Examples
