@@ -32,7 +32,7 @@ func TestService_Process_Integration(t *testing.T) {
 			),
 			srv: httptest.NewServer(
 				http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-					_, _ = fmt.Fprintf(w, testResponseData)
+					_, _ = fmt.Fprint(w, testResponseData)
 				}),
 			),
 			want: &hasher.Output{
