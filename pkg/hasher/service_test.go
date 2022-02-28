@@ -10,11 +10,6 @@ import (
 	"testing"
 )
 
-const (
-	testRequestURL   = "test.com"
-	testResponseData = "test"
-)
-
 type testHTTPClient struct {
 	body string
 	err  error
@@ -47,6 +42,11 @@ func (c *testHTTPClient) Get(string) (*http.Response, error) {
 }
 
 func TestService_Process(t *testing.T) {
+	const (
+		testRequestURL   = "test.com"
+		testResponseData = "test"
+	)
+
 	type fields struct {
 		client httpClient
 		hash   hashSum

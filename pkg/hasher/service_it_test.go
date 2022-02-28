@@ -11,11 +11,11 @@ import (
 	"github.com/alebabai/http-response-hash/pkg/hasher"
 )
 
-const (
-	testResponseData = "test"
-)
-
 func TestService_Process_Integration(t *testing.T) {
+	const (
+		testResponseData = "test"
+	)
+
 	tests := []struct {
 		name    string
 		svc     *hasher.Service
