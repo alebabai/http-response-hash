@@ -79,7 +79,7 @@ func (c *testHTTPClient) Get(string) (*http.Response, error) {
 	}, nil
 }
 
-func TestService_Process(t *testing.T) {
+func TestHasher_Process(t *testing.T) {
 	const (
 		testRequestURL   = "test.com"
 		testResponseData = "test"
@@ -138,11 +138,11 @@ func TestService_Process(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			svc := &Hasher{
+			h := &Hasher{
 				client: tt.fields.client,
 				hash:   tt.fields.hash,
 			}
-			got, err := svc.Process(tt.args.url)
+			got, err := h.Process(tt.args.url)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Process() error = %v, wantErr %v", err, tt.wantErr)
 				return

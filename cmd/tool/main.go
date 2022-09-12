@@ -32,19 +32,18 @@ func main() {
 		fatal(fmt.Errorf("failed to parse config: %w", err))
 	}
 
-	hshr := hasher.New(
+	h := hasher.New(
 		http.DefaultClient,
 		md5.New(),
 	)
-
 	action := func(in interface{}) string {
 		u := in.(url.URL)
-		out, err := hshr.Process(u.String())
+		res, err := h.Process(u.String())
 		if err != nil {
 			fatal(fmt.Errorf("failed to process %s: %w", u.String(), err))
 		}
 
-		return out.String()
+		return res.String()
 	}
 	consumer := func(out interface{}) {
 		fmt.Println(out)
