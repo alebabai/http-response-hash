@@ -1,52 +1,27 @@
 package pool
 
-type WorkerAction func(in interface{}) string
+type Action[T, V any] func(in T) V
 
-func Worker(in <-chan interface{}, out chan<- interface{}, action WorkerAction) {
+func Worker[T, V any](in <-chan T, out chan<- V, action Action[T, V]) {
 	for v := range in {
 		out <- action(v)
 	}
 }
 
-type WorkerConsumer func(out interface{})
+type Consumer[T any] func(in T)
 
-type WorkerPool struct {
-	Action   WorkerAction
-	Consumer WorkerConsumer
+type Pool[T, V any] struct {
+	Action   Action[T, V]
+	Consumer Consumer[V]
 	Size     int
 }
 
-type WorkerPoolOption func(pool *WorkerPool)
+func (p *Pool[T, V]) Process(values ...T) {
+	in := make(chan T, len(values))
+	out := make(chan V, len(values))
 
-func NewWorkerPool(
-	action WorkerAction,
-	consumer WorkerConsumer,
-	opts ...WorkerPoolOption,
-) *WorkerPool {
-	pool := &WorkerPool{
-		Action:   action,
-		Consumer: consumer,
-	}
-
-	for _, opt := range opts {
-		opt(pool)
-	}
-
-	return pool
-}
-
-func WithSize(size int) WorkerPoolOption {
-	return func(pool *WorkerPool) {
-		pool.Size = size
-	}
-}
-
-func (pool *WorkerPool) Process(values ...interface{}) {
-	in := make(chan interface{}, len(values))
-	out := make(chan interface{}, len(values))
-
-	for i := 0; i < pool.Size; i++ {
-		go Worker(in, out, pool.Action)
+	for i := 0; i < p.Size; i++ {
+		go Worker(in, out, p.Action)
 	}
 
 	for _, v := range values {
@@ -55,7 +30,7 @@ func (pool *WorkerPool) Process(values ...interface{}) {
 	close(in)
 
 	for i := 0; i < len(values); i++ {
-		pool.Consumer(<-out)
+		p.Consumer(<-out)
 	}
 	close(out)
 }

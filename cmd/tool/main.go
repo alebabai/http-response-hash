@@ -17,15 +17,6 @@ func fatal(err error) {
 	os.Exit(1)
 }
 
-func genericSlice(in []url.URL) []interface{} {
-	out := make([]interface{}, len(in))
-	for i, v := range in {
-		out[i] = v
-	}
-
-	return out
-}
-
 func main() {
 	cfg, err := config.ParseArgs()
 	if err != nil {
@@ -36,8 +27,7 @@ func main() {
 		http.DefaultClient,
 		md5.New(),
 	)
-	action := func(in interface{}) string {
-		u := in.(url.URL)
+	action := func(u url.URL) string {
 		res, err := h.Process(u.String())
 		if err != nil {
 			fatal(fmt.Errorf("failed to process %s: %w", u.String(), err))
@@ -45,13 +35,13 @@ func main() {
 
 		return res.String()
 	}
-	consumer := func(out interface{}) {
-		fmt.Println(out)
+	consumer := func(in string) {
+		fmt.Println(in)
 	}
-	wp := pool.NewWorkerPool(
-		action,
-		consumer,
-		pool.WithSize(cfg.Parallel),
-	)
-	wp.Process(genericSlice(cfg.URLs)...)
+	p := pool.Pool[url.URL, string]{
+		Action:   action,
+		Consumer: consumer,
+		Size:     cfg.Parallel,
+	}
+	p.Process(cfg.URLs...)
 }
