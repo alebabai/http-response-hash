@@ -32,14 +32,14 @@ func main() {
 		fatal(fmt.Errorf("failed to parse config: %w", err))
 	}
 
-	svc := hasher.NewService(
+	hshr := hasher.New(
 		http.DefaultClient,
 		md5.New(),
 	)
 
 	action := func(in interface{}) string {
 		u := in.(url.URL)
-		out, err := svc.Process(u.String())
+		out, err := hshr.Process(u.String())
 		if err != nil {
 			fatal(fmt.Errorf("failed to process %s: %w", u.String(), err))
 		}

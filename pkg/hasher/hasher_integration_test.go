@@ -11,22 +11,22 @@ import (
 	"github.com/alebabai/http-response-hash/pkg/hasher"
 )
 
-func TestService_Process_Integration(t *testing.T) {
+func TestService_Process_IntegrationTest(t *testing.T) {
 	const (
 		testResponseData = "test"
 	)
 
 	tests := []struct {
 		name    string
-		svc     *hasher.Service
+		svc     *hasher.Hasher
 		srv     *httptest.Server
-		want    *hasher.Output
+		want    *hasher.Result
 		prepare func()
 		wantErr bool
 	}{
 		{
 			name: "ok",
-			svc: hasher.NewService(
+			svc: hasher.New(
 				http.DefaultClient,
 				md5.New(),
 			),
@@ -35,7 +35,7 @@ func TestService_Process_Integration(t *testing.T) {
 					_, _ = fmt.Fprint(w, testResponseData)
 				}),
 			),
-			want: &hasher.Output{
+			want: &hasher.Result{
 				Sum:  md5.New().Sum([]byte(testResponseData)),
 				Size: md5.Size,
 			},

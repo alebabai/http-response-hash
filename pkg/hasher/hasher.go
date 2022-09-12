@@ -6,6 +6,16 @@ import (
 	"net/http"
 )
 
+type Result struct {
+	URL  string
+	Sum  []byte
+	Size int
+}
+
+func (res Result) String() string {
+	return fmt.Sprintf("%s %x", res.URL, res.Sum[:res.Size])
+}
+
 type httpClient interface {
 	Get(url string) (resp *http.Response, err error)
 }
@@ -15,20 +25,20 @@ type hashSum interface {
 	Size() int
 }
 
-type Service struct {
+type Hasher struct {
 	client httpClient
 	hash   hashSum
 }
 
-func NewService(client httpClient, hash hashSum) *Service {
-	return &Service{
+func New(client httpClient, hash hashSum) *Hasher {
+	return &Hasher{
 		client: client,
 		hash:   hash,
 	}
 }
 
-func (svc *Service) Process(url string) (*Output, error) {
-	resp, err := svc.client.Get(url)
+func (h *Hasher) Process(url string) (*Result, error) {
+	resp, err := h.client.Get(url)
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute get request: %w", err)
 	}
@@ -39,11 +49,9 @@ func (svc *Service) Process(url string) (*Output, error) {
 		return nil, fmt.Errorf("failed to read response body: %w", err)
 	}
 
-	out := &Output{
+	return &Result{
 		URL:  url,
-		Sum:  svc.hash.Sum(respBytes),
-		Size: svc.hash.Size(),
-	}
-
-	return out, nil
+		Sum:  h.hash.Sum(respBytes),
+		Size: h.hash.Size(),
+	}, nil
 }
