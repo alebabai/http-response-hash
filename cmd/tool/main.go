@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"os"
 
-	"github.com/alebabai/http-response-hash/config"
+	"github.com/alebabai/http-response-hash/pkg/config"
 	"github.com/alebabai/http-response-hash/pkg/hasher"
 	"github.com/alebabai/http-response-hash/pkg/pool"
 )
