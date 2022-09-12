@@ -2,9 +2,9 @@ package pool
 
 type Action[T, V any] func(in T) V
 
-func Worker[T, V any](in <-chan T, out chan<- V, action Action[T, V]) {
+func Worker[T, V any](in <-chan T, out chan<- V, a Action[T, V]) {
 	for v := range in {
-		out <- action(v)
+		out <- a(v)
 	}
 }
 

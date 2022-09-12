@@ -23,10 +23,10 @@ func main() {
 		fatal(fmt.Errorf("failed to parse config: %w", err))
 	}
 
-	h := hasher.New(
-		http.DefaultClient,
-		md5.New(),
-	)
+	h := &hasher.Hasher{
+		Client: http.DefaultClient,
+		Hash:   md5.New(),
+	}
 	action := func(u url.URL) string {
 		res, err := h.Process(u.String())
 		if err != nil {
@@ -38,7 +38,7 @@ func main() {
 	consumer := func(in string) {
 		fmt.Println(in)
 	}
-	p := pool.Pool[url.URL, string]{
+	p := &pool.Pool[url.URL, string]{
 		Action:   action,
 		Consumer: consumer,
 		Size:     cfg.Parallel,

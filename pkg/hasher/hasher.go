@@ -20,25 +20,18 @@ type httpClient interface {
 	Get(url string) (resp *http.Response, err error)
 }
 
-type hashSum interface {
+type hash interface {
 	Sum(b []byte) []byte
 	Size() int
 }
 
 type Hasher struct {
-	client httpClient
-	hash   hashSum
-}
-
-func New(client httpClient, hash hashSum) *Hasher {
-	return &Hasher{
-		client: client,
-		hash:   hash,
-	}
+	Client httpClient
+	Hash   hash
 }
 
 func (h *Hasher) Process(url string) (*Result, error) {
-	resp, err := h.client.Get(url)
+	resp, err := h.Client.Get(url)
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute get request: %w", err)
 	}
@@ -51,7 +44,7 @@ func (h *Hasher) Process(url string) (*Result, error) {
 
 	return &Result{
 		URL:  url,
-		Sum:  h.hash.Sum(respBytes),
-		Size: h.hash.Size(),
+		Sum:  h.Hash.Sum(respBytes),
+		Size: h.Hash.Size(),
 	}, nil
 }

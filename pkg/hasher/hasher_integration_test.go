@@ -26,10 +26,10 @@ func TestService_Process_IntegrationTest(t *testing.T) {
 	}{
 		{
 			name: "ok",
-			svc: hasher.New(
-				http.DefaultClient,
-				md5.New(),
-			),
+			svc: &hasher.Hasher{
+				Client: http.DefaultClient,
+				Hash:   md5.New(),
+			},
 			srv: httptest.NewServer(
 				http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 					_, _ = fmt.Fprint(w, testResponseData)
