@@ -54,6 +54,10 @@ Addresses must be space-separated, just like regular command line arguments.
 ### Examples
 
 ```bash
+go run ./cmd/tool google.com twitter.com
+```
+
+```bash
 $GOPATH/bin/tool https://google.com
 ```
 
