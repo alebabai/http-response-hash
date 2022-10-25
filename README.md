@@ -36,6 +36,7 @@ make test
 ```
 
 Install application:
+
 ```bash
 make install
 ```
