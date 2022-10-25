@@ -6,14 +6,9 @@ import (
 	"net/http"
 )
 
-type Result struct {
-	URL  string
-	Sum  []byte
-	Size int
-}
-
-func (res Result) String() string {
-	return fmt.Sprintf("%s %x", res.URL, res.Sum[:res.Size])
+type Hasher struct {
+	Client httpClient
+	Hash   hash
 }
 
 type httpClient interface {
@@ -23,11 +18,6 @@ type httpClient interface {
 type hash interface {
 	Sum(b []byte) []byte
 	Size() int
-}
-
-type Hasher struct {
-	Client httpClient
-	Hash   hash
 }
 
 func (h *Hasher) Process(url string) (*Result, error) {
@@ -47,4 +37,14 @@ func (h *Hasher) Process(url string) (*Result, error) {
 		Sum:  h.Hash.Sum(respBytes),
 		Size: h.Hash.Size(),
 	}, nil
+}
+
+type Result struct {
+	URL  string
+	Sum  []byte
+	Size int
+}
+
+func (res Result) String() string {
+	return fmt.Sprintf("%s %x", res.URL, res.Sum[:res.Size])
 }
