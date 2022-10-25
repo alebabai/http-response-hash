@@ -23,10 +23,14 @@ func main() {
 		fatal(fmt.Errorf("failed to parse config: %w", err))
 	}
 
-	h := &hasher.Hasher{
-		Client: http.DefaultClient,
-		Hash:   md5.New(),
+	h, err := hasher.New(
+		http.DefaultClient,
+		md5.New(),
+	)
+	if err != nil {
+		fatal(fmt.Errorf("failed to init hasher: %w", err))
 	}
+
 	action := func(u url.URL) string {
 		res, err := h.Process(u.String())
 		if err != nil {
@@ -38,10 +42,14 @@ func main() {
 	consumer := func(in string) {
 		fmt.Println(in)
 	}
-	p := &pool.Pool[url.URL, string]{
-		Action:   action,
-		Consumer: consumer,
-		Size:     cfg.Parallel,
+	p, err := pool.New(
+		action,
+		consumer,
+		cfg.Parallel,
+	)
+	if err != nil {
+		fatal(fmt.Errorf("failed to init pool: %w", err))
 	}
+
 	p.Process(cfg.URLs...)
 }

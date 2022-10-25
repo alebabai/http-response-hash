@@ -86,8 +86,8 @@ func TestHasher_Process(t *testing.T) {
 	)
 
 	type fields struct {
-		Client httpClient
-		Hash   hash
+		client httpClient
+		hash   hash
 	}
 	type args struct {
 		url string
@@ -102,10 +102,10 @@ func TestHasher_Process(t *testing.T) {
 		{
 			name: "ok",
 			fields: fields{
-				Client: &testHTTPClient{
+				client: &testHTTPClient{
 					body: testResponseData,
 				},
-				Hash: &testHash{
+				hash: &testHash{
 					sum:  md5.New().Sum([]byte(testResponseData)),
 					size: md5.Size,
 				},
@@ -122,10 +122,10 @@ func TestHasher_Process(t *testing.T) {
 		{
 			name: "err  client error",
 			fields: fields{
-				Client: &testHTTPClient{
+				client: &testHTTPClient{
 					err: errors.New("some client error"),
 				},
-				Hash: &testHash{
+				hash: &testHash{
 					sum:  md5.New().Sum([]byte(testResponseData)),
 					size: md5.Size,
 				},
@@ -139,8 +139,8 @@ func TestHasher_Process(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			h := &Hasher{
-				Client: tt.fields.Client,
-				Hash:   tt.fields.Hash,
+				client: tt.fields.client,
+				hash:   tt.fields.hash,
 			}
 			got, err := h.Process(tt.args.url)
 			if (err != nil) != tt.wantErr {

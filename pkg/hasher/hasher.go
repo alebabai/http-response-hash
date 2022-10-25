@@ -7,8 +7,8 @@ import (
 )
 
 type Hasher struct {
-	Client httpClient
-	Hash   hash
+	client httpClient
+	hash   hash
 }
 
 type httpClient interface {
@@ -20,8 +20,21 @@ type hash interface {
 	Size() int
 }
 
+func New(c httpClient, hsh hash) (*Hasher, error) {
+	h := &Hasher{
+		client: c,
+		hash:   hsh,
+	}
+
+	if err := h.Validate(); err != nil {
+		return nil, fmt.Errorf("failed to validate a hasher: %w", err)
+	}
+
+	return h, nil
+}
+
 func (h *Hasher) Process(url string) (*Result, error) {
-	resp, err := h.Client.Get(url)
+	resp, err := h.client.Get(url)
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute get request: %w", err)
 	}
@@ -34,8 +47,8 @@ func (h *Hasher) Process(url string) (*Result, error) {
 
 	return &Result{
 		URL:  url,
-		Sum:  h.Hash.Sum(respBytes),
-		Size: h.Hash.Size(),
+		Sum:  h.hash.Sum(respBytes),
+		Size: h.hash.Size(),
 	}, nil
 }
 

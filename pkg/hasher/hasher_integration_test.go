@@ -12,50 +12,36 @@ import (
 )
 
 func TestService_Process_IntegrationTest(t *testing.T) {
-	const (
-		testResponseData = "test"
+	const testResponseData = "test"
+
+	srv := httptest.NewServer(
+		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			_, _ = fmt.Fprint(w, testResponseData)
+		}),
 	)
+	defer srv.Close()
 
-	tests := []struct {
-		name    string
-		svc     *hasher.Hasher
-		srv     *httptest.Server
-		want    *hasher.Result
-		prepare func()
-		wantErr bool
-	}{
-		{
-			name: "ok",
-			svc: &hasher.Hasher{
-				Client: http.DefaultClient,
-				Hash:   md5.New(),
-			},
-			srv: httptest.NewServer(
-				http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-					_, _ = fmt.Fprint(w, testResponseData)
-				}),
-			),
-			want: &hasher.Result{
-				Sum:  md5.New().Sum([]byte(testResponseData)),
-				Size: md5.Size,
-			},
-		},
+	h, err := hasher.New(
+		http.DefaultClient,
+		md5.New(),
+	)
+	if err != nil {
+		t.Errorf("hasher.New() error = %v, want nil", err)
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			defer tt.srv.Close()
 
-			// get dynamic url from test http server
-			tt.want.URL = tt.srv.URL
-
-			got, err := tt.svc.Process(tt.srv.URL)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Process() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Process() got = %v, want %v", got, tt.want)
-			}
-		})
+	got, err := h.Process(srv.URL)
+	if err != nil {
+		t.Errorf("h.Process() error = %v, want nil", err)
 	}
+
+	want := &hasher.Result{
+		Sum:  md5.New().Sum([]byte(testResponseData)),
+		Size: md5.Size,
+		URL:  srv.URL,
+	}
+
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("Process() got = %v, want %v", got, want)
+	}
+
 }
