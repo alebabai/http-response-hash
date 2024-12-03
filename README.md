@@ -1,6 +1,6 @@
 # http-response-hash
 
-> A simple tool which makes http requests and prints the address of it along with the hash of the response
+> A simple tool that sends HTTP requests and outputs the address along with the hash of the response.
 
 [![build](https://img.shields.io/github/actions/workflow/status/alebabai/http-response-hash/ci.yml)](https://github.com/alebabai/http-response-hash/actions?query=workflow%3ACI)
 [![version](https://img.shields.io/github/go-mod/go-version/alebabai/http-response-hash)](https://go.dev/)
@@ -11,14 +11,12 @@
 
 ## Getting started
 
-Go modules are supported.
-
 ```bash
 make install
 ```
 
 ```bash
-$GOPATH/bin/tool http://google.com
+$GOPATH/bin/hasher http://google.com
 ```
 
 ## Development
@@ -51,19 +49,19 @@ make install
 
 ### Notes
 
-Tool support addresses with and without a schema (`http` will be used).  
-Addresses must be space-separated, just like regular command line arguments.
+Hasher supports addresses with and without a schema (`http` will be used by default).
+Addresses must be space-separated, just like regular command-line arguments.
 
 ### Examples
 
 ```bash
-go run ./cmd/tool google.com twitter.com
+go run ./cmd/hasher google.com twitter.com
 ```
 
 ```bash
-$GOPATH/bin/tool https://google.com
+$GOPATH/bin/hasher https://google.com
 ```
 
 ```bash
-$GOPATH/bin/tool -parallel 3 https://google.com facebook.com https://yahoo.com yandex.com twitter.com baroquemusiclibrary.com
+$GOPATH/bin/hasher -parallel 3 https://google.com facebook.com https://yahoo.com yandex.com twitter.com baroquemusiclibrary.com
 ```
