@@ -1,6 +1,6 @@
 # http-response-hash
 
-> A simple tool that sends HTTP requests and outputs the address along with the hash of the response.
+> A simple tool which makes http requests and prints the address of it along with the hash of the response
 
 [![build](https://img.shields.io/github/actions/workflow/status/alebabai/http-response-hash/ci.yml)](https://github.com/alebabai/http-response-hash/actions?query=workflow%3ACI)
 [![version](https://img.shields.io/github/go-mod/go-version/alebabai/http-response-hash)](https://go.dev/)
