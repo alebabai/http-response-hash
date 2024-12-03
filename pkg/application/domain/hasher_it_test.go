@@ -19,7 +19,7 @@ func TestService_Process_IntegrationTest(t *testing.T) {
 	const testResponseData = "test"
 
 	srv := httptest.NewServer(
-		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 			_, _ = fmt.Fprint(w, testResponseData)
 		}),
 	)

@@ -12,7 +12,7 @@ func InitLogger() {
 			slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
 
 				Level: slog.LevelInfo,
-				ReplaceAttr: func(groups []string, a slog.Attr) slog.Attr {
+				ReplaceAttr: func(_ []string, a slog.Attr) slog.Attr {
 					if a.Key == slog.TimeKey {
 						a.Value = slog.StringValue(time.Now().Format(time.RFC3339))
 					}

@@ -19,7 +19,7 @@ type testHTTPClient struct {
 	err  error
 }
 
-func (c *testHTTPClient) Do(req *http.Request) (*http.Response, error) {
+func (c *testHTTPClient) Do(_ *http.Request) (*http.Response, error) {
 	if c.err != nil {
 		return nil, c.err
 	}
