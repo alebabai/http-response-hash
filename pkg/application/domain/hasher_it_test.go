@@ -1,6 +1,7 @@
-package hasher_test
+package domain_test
 
 import (
+	"context"
 	"crypto/md5"
 	"fmt"
 	"net/http"
@@ -8,10 +9,13 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/alebabai/http-response-hash/pkg/hasher"
+	"github.com/alebabai/http-response-hash/pkg/application/domain"
+	"github.com/alebabai/http-response-hash/pkg/application/domain/hasher"
 )
 
 func TestService_Process_IntegrationTest(t *testing.T) {
+	ctx := context.Background()
+
 	const testResponseData = "test"
 
 	srv := httptest.NewServer(
@@ -19,29 +23,26 @@ func TestService_Process_IntegrationTest(t *testing.T) {
 			_, _ = fmt.Fprint(w, testResponseData)
 		}),
 	)
+
 	defer srv.Close()
 
-	h, err := hasher.New(
-		http.DefaultClient,
-		md5.New(),
-	)
-	if err != nil {
-		t.Errorf("hasher.New() error = %v, want nil", err)
-	}
+	hash := md5.New()
+	svc := domain.NewHasherService(hash)
 
-	got, err := h.Process(srv.URL)
+	got, err := svc.HashURLContent(ctx, hasher.HashURLContentInput{URL: srv.URL})
 	if err != nil {
 		t.Errorf("h.Process() error = %v, want nil", err)
+		return
 	}
 
-	want := &hasher.Result{
-		Sum:  md5.New().Sum([]byte(testResponseData)),
-		Size: md5.Size,
+	want := &hasher.HashURLContentOutput{
+		Sum:  hash.Sum([]byte(testResponseData)),
+		Size: hash.Size(),
 		URL:  srv.URL,
 	}
 
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("Process() got = %v, want %v", got, want)
+		return
 	}
-
 }

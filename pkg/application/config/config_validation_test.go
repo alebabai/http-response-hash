@@ -16,8 +16,8 @@ func makeURL(rawURL string) url.URL {
 
 func TestConfig_Validate(t *testing.T) {
 	type fields struct {
-		Parallel int
 		URLs     []url.URL
+		Parallel uint
 	}
 	tests := []struct {
 		name    string
@@ -36,14 +36,9 @@ func TestConfig_Validate(t *testing.T) {
 			},
 		},
 		{
-			name: "err  invalid parallel",
+			name: "err  empty urls",
 			fields: fields{
-				Parallel: -1,
-				URLs: []url.URL{
-					makeURL("http://test1.com"),
-					makeURL("http://test2.com"),
-					makeURL("http://test3.com"),
-				},
+				URLs: []url.URL{},
 			},
 			wantErr: true,
 		},
