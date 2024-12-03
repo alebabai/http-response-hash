@@ -2,7 +2,7 @@
 
 > A simple tool which makes http requests and prints the address of it along with the hash of the response
 
-[![build](https://img.shields.io/github/workflow/status/alebabai/http-response-hash/CI)](https://github.com/alebabai/http-response-hash/actions?query=workflow%3ACI)
+[![build](https://img.shields.io/github/actions/workflow/status/alebabai/http-response-hash/ci.yml)](https://github.com/alebabai/http-response-hash/actions?query=workflow%3ACI)
 [![version](https://img.shields.io/github/go-mod/go-version/alebabai/http-response-hash)](https://go.dev/)
 [![report](https://goreportcard.com/badge/github.com/alebabai/http-response-hash)](https://goreportcard.com/report/github.com/alebabai/http-response-hash)
 [![coverage](https://img.shields.io/codecov/c/github/alebabai/http-response-hash)](https://codecov.io/github/alebabai/http-response-hash)
@@ -10,6 +10,8 @@
 [![reference](https://pkg.go.dev/badge/github.com/alebabai/http-response-hash.svg)](https://pkg.go.dev/github.com/alebabai/http-response-hash)
 
 ## Getting started
+
+Go modules are supported.
 
 ```bash
 make install
