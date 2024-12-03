@@ -57,7 +57,7 @@ func main() {
 			return *res
 		},
 		Consumer: func(in hasher.HashURLContentOutput) {
-			slog.Info("hashing result", slog.String("output", in.String()))
+			slog.Info("hashing results", slog.String("input_url", in.URL), slog.String("content_hash", fmt.Sprintf("%x", in.Sum[:in.Size])))
 		},
 		Size: cfg.Parallel,
 	}
